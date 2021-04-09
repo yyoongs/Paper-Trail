@@ -11,7 +11,13 @@
 */
 
 const express = require('express');
+const finnhub = require('finnhub');
 const port = process.env.PORT || 5000;
+
+// Set up Finnhub connection
+const api_key = finnhub.ApiClient.instance.authentications['api_key'];
+api_key.apiKey = "c1nkgs237fku88ebnubg";
+const finnhubClient = new finnhub.DefaultApi();
 
 // Initialize express and set view engine to handlebars(.hbs)
 const app = express();
@@ -33,6 +39,19 @@ app.get('/', (req, res) => {
 // Page after logging in
 app.get('/home', (req, res) => {
     res.render('home');
+});
+
+// Endpoints for serving Finnhub data to client
+app.get('/finnhub/candlestick', (req, res) => {
+    finnhubClient.stockCandles(req.query.symbol, req.query.interval, req.query.from, req.query.to, {}, (error, data, response) => {
+        res.send(data)
+    })
+});
+
+app.get('/finnhub/quote', (req, res) => {
+    finnhubClient.quote(req.query.symbol, (error, data, response) => {
+        res.send(data)
+    })
 });
 
 app.listen(port, () => 

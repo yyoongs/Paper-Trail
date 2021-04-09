@@ -1,0 +1,30 @@
+#chart-container {
+    padding-top: 10px;
+    padding-left: 20px;
+}
+
+#chart-title {
+    padding: 10px;
+}
+
+#switcher {
+    margin-top: 20px;
+}
+
+#quote {
+    width: 500px;
+}
+
+#symbol-select-container {
+    padding-left: 20px;
+    margin-top: 20px;
+    width: 500px;
+}
+
+#symbol-submit {
+    display:inline;
+}
+
+#symbol-input {
+    width: 30%;
+}

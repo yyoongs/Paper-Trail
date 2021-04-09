@@ -41,6 +41,9 @@ app.get('/home', (req, res) => {
     res.status(200).render('home');
 });
 
+app.get('/chart', (req, res) => {
+    res.status(200).render('chart');
+});
 
 // Endpoints for serving Finnhub data to client
 app.get('/finnhub/candlestick', (req, res) => {

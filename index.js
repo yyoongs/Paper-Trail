@@ -41,6 +41,10 @@ app.get('/home', (req, res) => {
     res.render('home');
 });
 
+app.get('/', (req, res) => {
+    res.sendFile('./chart.html', {root: __dirname});
+});
+
 // Endpoints for serving Finnhub data to client
 app.get('/finnhub/candlestick', (req, res) => {
     finnhubClient.stockCandles(req.query.symbol, req.query.interval, req.query.from, req.query.to, {}, (error, data, response) => {

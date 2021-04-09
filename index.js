@@ -24,9 +24,14 @@ app.engine('hbs', handlebars({
 
 app.use(express.static('public'));
 
-// Loads main.hbs inside index.hbs
+// Loads login.hbs inside index.hbs
 app.get('/', (req, res) => {
-    res.render('main', {layout: 'index'})
+    res.render('login', {layout: 'index'})
+});
+
+// Page after logging in
+app.get('/home', (req, res) => {
+    res.render('home');
 });
 
 app.listen(port, () => 

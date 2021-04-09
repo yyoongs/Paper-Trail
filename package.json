@@ -1,0 +1,23 @@
+{
+  "name": "paper-trail",
+  "version": "1.0.0",
+  "description": "OSU Hackathon Project Spring 2021",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alpacawool/Paper-Trail.git"
+  },
+  "author": "Derth Adams, Kelton Orth, Yongsung Cho, Patricia Booth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alpacawool/Paper-Trail/issues"
+  },
+  "homepage": "https://github.com/alpacawool/Paper-Trail#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.0"
+  }
+}

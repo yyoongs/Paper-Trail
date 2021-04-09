@@ -33,16 +33,16 @@ app.use(express.static('public'));
 
 // Loads login.hbs inside index.hbs
 app.get('/', (req, res) => {
-    res.render('login', {layout: 'index'})
+    res.status(200).render('login', {layout: 'index'})
 });
 
 // Page after logging in
 app.get('/home', (req, res) => {
-    res.render('home');
+    res.status(200).render('home');
 });
 
-app.get('/', (req, res) => {
-    res.sendFile('./chart.html', {root: __dirname});
+app.get('/chart', (req, res) => {
+    res.status(200).render('chart');
 });
 
 // Endpoints for serving Finnhub data to client

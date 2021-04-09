@@ -18,6 +18,7 @@
   "homepage": "https://github.com/alpacawool/Paper-Trail#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "express-handlebars": "^5.3.0"
+    "express-handlebars": "^5.3.0",
+    "finnhub": "^1.2.1"
   }
 }

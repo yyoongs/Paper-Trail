@@ -1,0 +1,57 @@
+
+#graphContainer {
+    border: 3px;
+    border-color: blue;
+    border-style: solid;
+    border-radius: 10px;
+    min-height: 500px;
+    background-color: lightgreen;
+}
+
+#leaderboardContainer {
+    border: 3px;
+    border-color: blue;
+    border-style: solid;
+    border-radius: 10px;
+    min-height: 500px;
+    margin-left: 15px;
+    background-color: lightblue;
+}
+
+#stocksContainer {
+    border: 3px;
+    border-color: blue;
+    border-style: solid;
+    border-radius: 10px;
+    min-height: 150px;
+    margin-top: 15px;
+    background-color: lightcoral;
+}
+
+#buyButton {
+    position: absolute;
+    bottom: 10px;
+    left: 60%;
+}
+
+#sellButton {
+    position: absolute;
+    bottom: 10px;
+    left: 35%;
+}
+
+.stock-row {
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.stock-item {
+    border: 3px;
+    border-color: black;
+    border-style: solid;
+    margin-left: 3px;
+    margin-right: 3px;
+    text-align: center;
+    border-radius: 5px;
+    background-color: aliceblue;
+}

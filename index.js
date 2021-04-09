@@ -11,7 +11,7 @@
 */
 
 const express = require('express');
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 // Initialize express and set view engine to handlebars(.hbs)
 const app = express();

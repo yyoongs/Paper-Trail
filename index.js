@@ -19,6 +19,7 @@ const handlebars = require('express-handlebars');
 app.set('view engine', 'hbs');
 app.engine('hbs', handlebars({
     layoutsDir: __dirname + '/views/layouts',
+    defaultLayout: false,
     extname: 'hbs'
 }));
 
@@ -31,7 +32,7 @@ app.get('/', (req, res) => {
 
 // Page after logging in
 app.get('/home', (req, res) => {
-    res.render('home');
+    res.render('home', {layout: 'index'});
 });
 
 app.listen(port, () => 

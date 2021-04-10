@@ -3,6 +3,8 @@ const LAST_500_POINTS = 30000;
 const WEEK_SECS = 604800;
 const EDT_OFFSET = 14400;
 
+let lastTimestamp;
+
 function getUTCTimestampSeconds() {
     return Math.floor(Date.now() / 1000);
 }
@@ -43,29 +45,29 @@ function getFinnQuote(symbol) {
         .then(response => response.json())
 }
 
-function getStockCandle(symbol, interval, from, to) {
-    return fetch('/finnhub/candlestick/?symbol=' + symbol + '&interval=' + interval + '&from=' + from + '&to=' + to)
-        .then(response => response.json())
-}
+// function getStockCandle(symbol, interval, from, to) {
+//     return fetch('/finnhub/candlestick/?symbol=' + symbol + '&interval=' + interval + '&from=' + from + '&to=' + to)
+//         .then(response => response.json())
+// }
 
 function getCryptoCandle(symbol, interval, from, to) {
     return fetch('/finnhub/crypto/?symbol=' + symbol + '&interval=' + interval + '&from=' + from + '&to=' + to)
         .then(response => response.json())
 }
 
-function finnCandleToOHLCData(data) {
-    let result = [];
-    for (let i = 0; i < data.c.length; i++) {
-        result.push({
-                "time": UTCtoEDT(data.t[i]),
-                "open": data.o[i],
-                "high": data.h[i],
-                "low": data.l[i],
-                "close": data.c[i]
-            });
-    }
-    return result;
-}
+// function finnCandleToOHLCData(data) {
+//     let result = [];
+//     for (let i = 0; i < data.c.length; i++) {
+//         result.push({
+//                 "time": UTCtoEDT(data.t[i]),
+//                 "open": data.o[i],
+//                 "high": data.h[i],
+//                 "low": data.l[i],
+//                 "close": data.c[i]
+//             });
+//     }
+//     return result;
+// }
 
 function finnCandleToLineData(data) {
     let result = [];
@@ -78,40 +80,41 @@ function finnCandleToLineData(data) {
     return result;
 }
 
-function loadChartData(symbol, scale, chart, series, title, current, updated) {
-    makeScaleButtonActive(scale);
+function loadChartData(symbol, scale, chart, series, symbolName, current, updated) {
+    // makeScaleButtonActive(scale);
     let now = getUTCTimestampSeconds();
     let range = createRange(now, scale);
 
     getCryptoCandle(symbol, range.interval, range.from, range.to)
         .then(data => {
-            title.innerText = "Price chart for " + symbol;
+            symbolName.innerText = symbol;
 
             let priceData = finnCandleToLineData(data);
             series.setData(priceData);
 
             chart.timeScale().fitContent();
+            lastTimestamp = range.to;
 
             updateQuote(current, priceData[priceData.length - 1].value, updated);
         });
 }
 
 function updateQuote(current, currentPrice, updated) {
-    current.innerText = currentPrice;
+    current.innerText = currentPrice.toFixed(2);
     updated.innerText = new Date().toLocaleString('en-US', {timeZone: 'America/New_York'}) + " EDT";
 }
 
-function makeScaleButtonActive(scale) {
-    let scaleButtons = document.getElementsByClassName('date-scale-btn');
-    [].forEach.call(scaleButtons, function(element) {
-        element.classList.remove('active')
-    });
-    document.getElementById(scale).labels[0].classList.add('active');
-}
+// function makeScaleButtonActive(scale) {
+//     let scaleButtons = document.getElementsByClassName('date-scale-btn');
+//     [].forEach.call(scaleButtons, function(element) {
+//         element.classList.remove('active')
+//     });
+//     document.getElementById(scale).labels[0].classList.add('active');
+// }
 
 document.addEventListener('DOMContentLoaded', function() {
     const chartBody = document.getElementById('chart');
-    const chartTitle = document.getElementById('chart-title');
+    const symbolName = document.getElementById('symbol-name');
     const symbolSelectForm = document.getElementById('symbol-select');
 
     const current = document.getElementById('price-current');
@@ -137,34 +140,44 @@ document.addEventListener('DOMContentLoaded', function() {
     let symbol = "BINANCE:BTCUSDT";
     let scale = "day";
 
-    document.querySelectorAll('input[name="date-scale"]').forEach((button) => {
-        button.addEventListener("click", function(event) {
-            scale = event.target.id;
-            makeScaleButtonActive(scale);
+    // document.querySelectorAll('input[name="date-scale"]').forEach((button) => {
+    //     button.addEventListener("click", function(event) {
+    //         scale = event.target.id;
+    //         makeScaleButtonActive(scale);
+    //
+    //         loadChartData(symbol, scale, priceChart, areaSeries, chartTitle, current, updated);
+    //     })
+    // });
 
-            loadChartData(symbol, scale, priceChart, areaSeries, chartTitle, current, updated);
-        })
-    });
-
-    loadChartData(symbol, scale, priceChart, areaSeries, chartTitle, current, updated);
+    loadChartData(symbol, scale, priceChart, areaSeries, symbolName, current, updated);
 
     symbolSelectForm.addEventListener('submit', (event) => {
         event.preventDefault();
         symbol = event.target[0].value;
-        updateQuote();
-        loadChartData(symbol, 'day', priceChart, areaSeries, chartTitle, current, updated);
+        // updateQuote();
+        loadChartData(symbol, 'day', priceChart, areaSeries, symbolName, current, updated);
     });
 
     function updateChart() {
         getFinnQuote(symbol)
             .then(data => {
-                areaSeries.update({
-                    time: UTCtoEDT(getUTCTimestampSeconds()),
-                    value: data.c
-                });
+                let currentTimestamp = UTCtoEDT(getUTCTimestampSeconds());
+                if (currentTimestamp < lastTimestamp + 60) {
+                    areaSeries.update({
+                        time: lastTimestamp,
+                        value: data.c
+                    });
+                } else {
+                    areaSeries.update({
+                        time: currentTimestamp,
+                        value: data.c
+                    });
+                    lastTimestamp = currentTimestamp;
+    }
+
                 updateQuote(current, data.c, updated);
             })
     }
 
-    const refreshChart = setInterval(updateChart, 60000);
+    const refreshChart = setInterval(updateChart, 1000);
 });

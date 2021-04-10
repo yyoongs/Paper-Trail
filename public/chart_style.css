@@ -7,9 +7,17 @@
     padding: 10px;
 }
 
-#switcher {
-    margin-top: 20px;
+#price-current {
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 35px;
+    color: #131722;
+    margin-left: 30px;
 }
+
+/*#switcher {*/
+/*    margin-top: 20px;*/
+/*}*/
 
 #quote {
     width: 500px;
@@ -29,6 +37,6 @@
     width: 30%;
 }
 
-.btn-check {
-    display: none;
-}
+/*.btn-check {*/
+/*    display: none;*/
+/*}*/

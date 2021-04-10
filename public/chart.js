@@ -67,6 +67,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const graphContainer = document.getElementById('graphContainer');
     const symbolName = document.getElementById('symbol-name');
     const symbolSelectForm = document.getElementById('symbol-select');
+    const symbolSelect1 = document.getElementById('symbol-select1');
+    const symbolSelect2 = document.getElementById('symbol-select2');
+
 
     const current = document.getElementById('price-current');
     const updated = document.getElementById('last-updated');
@@ -101,6 +104,22 @@ document.addEventListener('DOMContentLoaded', function() {
     symbolSelectForm.addEventListener('submit', (event) => {
         event.preventDefault();
         symbol = event.target[0].value;
+        // symbol = 'TSLA';
+        console.log(event.target[0].value);
+        loadChartData(symbol, 'day', priceChart, areaSeries, symbolName, current, updated);
+    });
+
+    symbolSelect1.addEventListener('submit', (event) => {
+        event.preventDefault();
+        symbol = event.target[0].value;
+        console.log(event.target[0].value);
+        loadChartData(symbol, 'day', priceChart, areaSeries, symbolName, current, updated);
+    });
+
+    symbolSelect2.addEventListener('submit', (event) => {
+        event.preventDefault();
+        symbol = event.target[0].value;
+        console.log(event.target[0].value);
         loadChartData(symbol, 'day', priceChart, areaSeries, symbolName, current, updated);
     });
 

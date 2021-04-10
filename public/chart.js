@@ -11,7 +11,8 @@ function getUTCTimestampSeconds() {
 function createRange(to, scale) {
     switch(scale) {
         case 'day': {
-            let from = to - (to % DAY_SECS);
+            // let from = to - (to % DAY_SECS);
+            let from = to - DAY_SECS;
             return {
                 from: from,
                 to: to,
@@ -59,12 +60,17 @@ function getFinnQuote(symbol) {
         .then(response => response.json())
 }
 
-function getFinnCandle(symbol, interval, from, to) {
+function getStockCandle(symbol, interval, from, to) {
     return fetch('/finnhub/candlestick/?symbol=' + symbol + '&interval=' + interval + '&from=' + from + '&to=' + to)
         .then(response => response.json())
 }
 
-function finnCandleToChartData(data) {
+function getCryptoCandle(symbol, interval, from, to) {
+    return fetch('/finnhub/crypto/?symbol=' + symbol + '&interval=' + interval + '&from=' + from + '&to=' + to)
+        .then(response => response.json())
+}
+
+function finnCandleToOHLCData(data) {
     let result = [];
     for (let i = 0; i < data.c.length; i++) {
         result.push({
@@ -79,10 +85,11 @@ function finnCandleToChartData(data) {
 }
 
 function loadChartData(symbol, scale, chart, series, title) {
-    let now = getUTCTimestampSeconds()
+    let now = getUTCTimestampSeconds();
     let range = createRange(now, scale);
 
-    getFinnCandle(symbol, range.interval, range.from, range.to)
+    // getStockCandle(symbol, range.interval, range.from, range.to)
+    getCryptoCandle(symbol, range.interval, range.from, range.to)
         .then(data => {
             title.innerText = "Price chart for " + symbol;
 
@@ -117,10 +124,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }});
     const barSeries = priceChart.addBarSeries();
 
-    let symbol = "AAPL";
+    // let symbol = "AAPL";
+    let symbol = "BINANCE:BTCUSDT";
     let scale = "day";
 
-    console.log(getFinnQuote(symbol));
+    // console.log(getFinnQuote(symbol));
 
     document.querySelectorAll('input[name="date-scale"]').forEach((button) => {
         button.addEventListener("click", function(event) {
@@ -142,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateQuote() {
         getFinnQuote(symbol)
             .then(data => {
-                console.log(data);
+                // console.log(data);
                 current.innerText = data.c;
                 open.innerText = data.o;
                 high.innerText = data.h;

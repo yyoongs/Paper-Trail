@@ -84,6 +84,17 @@ function finnCandleToOHLCData(data) {
     return result;
 }
 
+function finnCandleToLineData(data) {
+    let result = [];
+    for (let i = 0; i < data.c.length; i++) {
+        result.push({
+            "time": UTCtoEDT(data.t[i]),
+            "value": data.c[i]
+        });
+    }
+    return result;
+}
+
 function loadChartData(symbol, scale, chart, series, title) {
     let now = getUTCTimestampSeconds();
     let range = createRange(now, scale);
@@ -92,8 +103,8 @@ function loadChartData(symbol, scale, chart, series, title) {
     getCryptoCandle(symbol, range.interval, range.from, range.to)
         .then(data => {
             title.innerText = "Price chart for " + symbol;
-
-            let priceData = finnCandleToChartData(data);
+            // let priceData = finnCandleToOHLCData(data);
+            let priceData = finnCandleToLineData(data);
             series.setData(priceData);
             // series.setData(data);
 
@@ -121,8 +132,15 @@ document.addEventListener('DOMContentLoaded', function() {
         height: 300,
         timeScale: {
             timeVisible: true
-        }});
-    const barSeries = priceChart.addBarSeries();
+        },
+        grid: {
+            vertLines: {
+                visible: false
+            }
+        }
+    });
+    // const barSeries = priceChart.addBarSeries();
+    const areaSeries = priceChart.addAreaSeries({lineWidth: 1});
 
     // let symbol = "AAPL";
     let symbol = "BINANCE:BTCUSDT";
@@ -138,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     });
 
-    loadChartData(symbol, scale, priceChart, barSeries, chartTitle);
+    loadChartData(symbol, scale, priceChart, areaSeries, chartTitle);
 
     symbolSelectForm.addEventListener('submit', (event) => {
         event.preventDefault();

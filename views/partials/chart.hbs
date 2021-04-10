@@ -49,8 +49,17 @@
 
 <div id="symbol-select-container">
   <form class="d-flex" action="" id="symbol-select">
-      <input class="form-control form-control-sm" type="search" id="symbol-input" placeholder="Enter a symbol"
-             aria-label="Search">
-      <button class="btn btn-sm btn-outline-dark" type="submit" id="symbol-submit">Show price history</button>
+      <input type="hidden" name="symbol" value="AAPL">
+      <button class="btn btn-sm btn-outline-dark" type="submit" id="symbol-submit">Apple</button>
   </form>
+    <form class="d-flex" action="" id="symbol-select1">
+        <input type="hidden" name="symbol" value="TSLA">
+        <button class="btn btn-sm btn-outline-dark" type="submit" id="symbol-submit">Tesla</button>
+    </form>
+    <form class="d-flex" action="" id="symbol-select2">
+        <input type="hidden" name="symbol" value="MSFT">
+        <button class="btn btn-sm btn-outline-dark" type="submit" id="symbol-submit">MS</button>
+    </form>
+
+
 </div>

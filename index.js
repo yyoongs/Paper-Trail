@@ -14,6 +14,58 @@ const express = require('express');
 const finnhub = require('finnhub');
 const port = process.env.PORT || 5000;
 
+
+//Postgres connestion
+const { Client } = require('pg');
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+client.connect();
+
+
+//Test Connection
+//client.query('DROP TABLE IF EXISTS "Users"', (err, res) => {
+//  if (err) {
+//    console.log(err.stack);
+//  } else {
+//    console.log(res.rows[0]);
+//  }
+//});
+
+client.query('CREATE TABLE IF NOT EXISTS "Users" ("userid" INTEGER, "balance" INTEGER)', (err, res) => {
+  if (err) {
+    console.log(err.stack);
+  } else {
+    console.log(res.rows[0]);
+  }
+});
+
+client.query('INSERT INTO "Users"(userid, balance) VALUES (0001, 10000)', (err, res) => {
+  if (err) {
+    console.log(err.stack);
+  } else {
+    console.log(res.rows[0]);
+  }
+});
+
+
+var selectResult = "TESTING";
+
+client.query('SELECT * FROM "Users"', (err, res) => {
+  if (err) {
+    console.log(err.stack);
+  } else {
+    console.log(res.rows[0]);
+    selectResult = res.rows[0];
+     console.log("PRINTING SELECT RESULT INSIDE FUNC " + selectResult);
+  }
+});
+
 // Set up Finnhub connection
 const api_key = finnhub.ApiClient.instance.authentications['api_key'];
 api_key.apiKey = "c1nkgs237fku88ebnubg";

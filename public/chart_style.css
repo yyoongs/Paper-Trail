@@ -31,12 +31,13 @@
 
 #symbol-submit {
     display:inline;
+    margin-left: 10px;
 }
 
 #symbol-input {
     width: 30%;
 }
 
-/*.btn-check {*/
-/*    display: none;*/
-/*}*/
+#quote {
+    display: none;
+}

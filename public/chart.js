@@ -1,5 +1,5 @@
 const LAST_500_POINTS = 30000;
-const WEEK_SECS = 604800;
+const CHART_INTERVAL = "1";
 const EDT_OFFSET = 14400;
 
 const CHART_WIDTH_PERCENTAGE = 0.9;
@@ -9,30 +9,6 @@ let lastTimestamp;
 
 function getUTCTimestampSeconds() {
     return Math.floor(Date.now() / 1000);
-}
-
-function createRange(to, scale) {
-    switch(scale) {
-        case 'day': {
-            // let from = to - DAY_SECS;
-            let from = to - LAST_500_POINTS;
-            return {
-                from: from,
-                to: to,
-                interval: "1"
-            };
-        }
-        case 'week': {
-            let from = to - WEEK_SECS;
-            return {
-                from: from,
-                to: to,
-                interval: "30"
-            };
-        }
-        default:
-            console.log("Error parsing range")
-    }
 }
 
 /**
@@ -64,11 +40,10 @@ function finnCandleToLineData(data) {
 }
 
 function loadChartData(symbol, scale, chart, series, symbolName, current, updated) {
-    // makeScaleButtonActive(scale);
-    let now = getUTCTimestampSeconds();
-    let range = createRange(now, scale);
+    let to = getUTCTimestampSeconds();
+    let from = to - LAST_500_POINTS;
 
-    getCryptoCandle(symbol, range.interval, range.from, range.to)
+    getCryptoCandle(symbol, CHART_INTERVAL, from, to)
         .then(data => {
             symbolName.innerText = symbol;
 
@@ -76,7 +51,7 @@ function loadChartData(symbol, scale, chart, series, symbolName, current, update
             series.setData(priceData);
 
             chart.timeScale().fitContent();
-            lastTimestamp = range.to;
+            lastTimestamp = to;
 
             updateQuote(current, priceData[priceData.length - 1].value, updated);
         });
@@ -92,8 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const graphContainer = document.getElementById('graphContainer');
     const symbolName = document.getElementById('symbol-name');
     const symbolSelectForm = document.getElementById('symbol-select');
-
-    console.log("chartContainer has width: " + graphContainer.offsetWidth + ", height: " + graphContainer.offsetHeight);
 
     const current = document.getElementById('price-current');
     const updated = document.getElementById('last-updated');
@@ -112,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const areaSeries = priceChart.addAreaSeries({lineWidth: 1});
 
     function resizeChart() {
-        console.log("Resizing chart")
         priceChart.applyOptions({
             width: Math.floor(graphContainer.offsetWidth * CHART_WIDTH_PERCENTAGE),
             height: Math.floor(graphContainer.offsetHeight * CHART_HEIGHT_PERCENTAGE)

@@ -1,7 +1,5 @@
 const DAY_SECS = 86400;
 const WEEK_SECS = 604800;
-const MONTH_SECS = 2592000;
-const YEAR_SECS = 31536000;
 const EDT_OFFSET = 14400;
 
 function getUTCTimestampSeconds() {
@@ -11,7 +9,6 @@ function getUTCTimestampSeconds() {
 function createRange(to, scale) {
     switch(scale) {
         case 'day': {
-            // let from = to - (to % DAY_SECS);
             let from = to - DAY_SECS;
             return {
                 from: from,
@@ -25,22 +22,6 @@ function createRange(to, scale) {
                 from: from,
                 to: to,
                 interval: "30"
-            };
-        }
-        case 'month': {
-            let from = to - MONTH_SECS;
-            return {
-                from: from,
-                to: to,
-                interval: "60"
-            };
-        }
-        case 'year': {
-            let from = to - YEAR_SECS;
-            return {
-                from: from,
-                to: to,
-                interval: "D"
             };
         }
         default:
@@ -100,19 +81,13 @@ function loadChartData(symbol, scale, chart, series, title, ) {
     let now = getUTCTimestampSeconds();
     let range = createRange(now, scale);
 
-    // getStockCandle(symbol, range.interval, range.from, range.to)
     getCryptoCandle(symbol, range.interval, range.from, range.to)
         .then(data => {
             title.innerText = "Price chart for " + symbol;
-            // let priceData = finnCandleToOHLCData(data);
+
             let priceData = finnCandleToLineData(data);
             series.setData(priceData);
-            // series.setData(data);
 
-            chart.timeScale().setVisibleRange({
-                from: range.from,
-                to: range.to
-            });
             chart.timeScale().fitContent();
         });
 }
@@ -150,11 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     const areaSeries = priceChart.addAreaSeries({lineWidth: 1});
 
-    // let symbol = "AAPL";
     let symbol = "BINANCE:BTCUSDT";
     let scale = "day";
-
-    // console.log(getFinnQuote(symbol));
 
     document.querySelectorAll('input[name="date-scale"]').forEach((button) => {
         button.addEventListener("click", function(event) {
@@ -177,7 +149,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateQuote() {
         getFinnQuote(symbol)
             .then(data => {
-                // console.log(data);
                 current.innerText = data.c;
                 open.innerText = data.o;
                 high.innerText = data.h;

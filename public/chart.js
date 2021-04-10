@@ -1,4 +1,5 @@
 const DAY_SECS = 86400;
+const LAST_500_POINTS = 30000;
 const WEEK_SECS = 604800;
 const EDT_OFFSET = 14400;
 
@@ -9,11 +10,12 @@ function getUTCTimestampSeconds() {
 function createRange(to, scale) {
     switch(scale) {
         case 'day': {
-            let from = to - DAY_SECS;
+            // let from = to - DAY_SECS;
+            let from = to - LAST_500_POINTS;
             return {
                 from: from,
                 to: to,
-                interval: "5"
+                interval: "1"
             };
         }
         case 'week': {
@@ -76,7 +78,7 @@ function finnCandleToLineData(data) {
     return result;
 }
 
-function loadChartData(symbol, scale, chart, series, title, ) {
+function loadChartData(symbol, scale, chart, series, title, current, updated) {
     makeScaleButtonActive(scale);
     let now = getUTCTimestampSeconds();
     let range = createRange(now, scale);
@@ -89,7 +91,14 @@ function loadChartData(symbol, scale, chart, series, title, ) {
             series.setData(priceData);
 
             chart.timeScale().fitContent();
+
+            updateQuote(current, priceData[priceData.length - 1].value, updated);
         });
+}
+
+function updateQuote(current, currentPrice, updated) {
+    current.innerText = currentPrice;
+    updated.innerText = new Date().toLocaleString('en-US', {timeZone: 'America/New_York'}) + " EDT";
 }
 
 function makeScaleButtonActive(scale) {
@@ -109,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const open = document.getElementById('price-open');
     const high = document.getElementById('price-high');
     const low = document.getElementById('price-low');
-    const lastUpdated = document.getElementById('last-updated');
+    const updated = document.getElementById('last-updated');
 
     const priceChart = LightweightCharts.createChart(chartBody, {
         width: 480,
@@ -133,32 +142,30 @@ document.addEventListener('DOMContentLoaded', function() {
             scale = event.target.id;
             makeScaleButtonActive(scale);
 
-            loadChartData(symbol, scale, priceChart, areaSeries, chartTitle);
+            loadChartData(symbol, scale, priceChart, areaSeries, chartTitle, current, updated);
         })
     });
 
-    loadChartData(symbol, scale, priceChart, areaSeries, chartTitle);
+    loadChartData(symbol, scale, priceChart, areaSeries, chartTitle, current, updated);
 
     symbolSelectForm.addEventListener('submit', (event) => {
         event.preventDefault();
         symbol = event.target[0].value;
         updateQuote();
-        loadChartData(symbol, 'day', priceChart, areaSeries, chartTitle);
+        loadChartData(symbol, 'day', priceChart, areaSeries, chartTitle, current, updated);
     });
 
-    function updateQuote() {
+    function updateChart() {
         getFinnQuote(symbol)
             .then(data => {
-                current.innerText = data.c;
-                open.innerText = data.o;
-                high.innerText = data.h;
-                low.innerText = data.l;
-                let now = new Date();
-                lastUpdated.innerText = now.toLocaleString('en-US', {timeZone: 'America/New_York'}) + " EDT";
+                areaSeries.update({
+                    time: UTCtoEDT(getUTCTimestampSeconds()),
+                    value: data.c
+                });
+                updateQuote(current, data.c, updated);
             })
     }
-
-    updateQuote();
-    const refreshQuotes = setInterval(updateQuote, 60000);
+    
+    const refreshChart = setInterval(updateChart, 60000);
 
 });

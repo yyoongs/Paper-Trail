@@ -1,4 +1,4 @@
-const DAY_SECS = 86400;
+// const DAY_SECS = 86400;
 const LAST_500_POINTS = 30000;
 const WEEK_SECS = 604800;
 const EDT_OFFSET = 14400;
@@ -115,9 +115,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const symbolSelectForm = document.getElementById('symbol-select');
 
     const current = document.getElementById('price-current');
-    const open = document.getElementById('price-open');
-    const high = document.getElementById('price-high');
-    const low = document.getElementById('price-low');
+    // const open = document.getElementById('price-open');
+    // const high = document.getElementById('price-high');
+    // const low = document.getElementById('price-low');
     const updated = document.getElementById('last-updated');
 
     const priceChart = LightweightCharts.createChart(chartBody, {
@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateQuote(current, data.c, updated);
             })
     }
-    
-    const refreshChart = setInterval(updateChart, 60000);
 
+    const refreshChart = setInterval(updateChart, 60000);
 });

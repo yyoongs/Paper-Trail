@@ -23,60 +23,12 @@
     <div class="row">
         <div class="col-8" id="graphContainer">
             {{> chart}}
-            <button type="button" class="btn btn-success btn-lg" id="buyButton">Buy</button>
-            <button type="button" class="btn btn-danger btn-lg" id="sellButton">Sell</button>
+
         </div>
         <div class="col" id="leaderboardContainer">
             {{> leaderboard passedData=leaderboardData}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col" id="stocksContainer">
-            <div class="row stock-row">
-
-                <div>
-                    <button class="btn btn-sm btn-outline-dark" type="submit" id="symbol-select" onclick="aaa('TSLA')">TSLA</button>
-                </div>
-                <div class="col stock-item">
-                    Cool Stock 2
-                </div>
-                <div class="col stock-item">
-                    Cool Stock 3
-                </div>
-            </div>
-            <div class="row stock-row">
-                <div class="col stock-item">
-                    Cool Stock 4
-                </div>
-                <div class="col stock-item">
-                    Cool Stock 5
-                </div>
-                <div class="col stock-item">
-                    Cool Stock 6
-                </div>
-            </div>
-            <div class="row stock-row">
-                <div class="col stock-item">
-                    Cool Stock 7
-                </div>
-                <div class="col stock-item">
-                    Cool Stock 8
-                </div>
-                <div class="col stock-item">
-                    Cool Stock 9
-                </div>
-            </div>
-            <div class="row stock-row">
-                <div class="col stock-item">
-                    Cool Stock 10
-                </div>
-                <div class="col stock-item">
-                    Cool Stock 11
-                </div>
-                <div class="col stock-item">
-                    Cool Stock 12
-                </div>
-            </div>
+            <button type="button" class="btn btn-success btn-lg" id="buyButton">Buy</button>
+            <button type="button" class="btn btn-danger btn-lg" id="sellButton">Sell</button>
         </div>
     </div>
 </div>

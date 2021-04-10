@@ -1,7 +1,9 @@
-// const DAY_SECS = 86400;
 const LAST_500_POINTS = 30000;
 const WEEK_SECS = 604800;
 const EDT_OFFSET = 14400;
+
+const CHART_WIDTH_PERCENTAGE = 0.9;
+const CHART_HEIGHT_PERCENTAGE  = 0.7;
 
 let lastTimestamp;
 
@@ -45,29 +47,10 @@ function getFinnQuote(symbol) {
         .then(response => response.json())
 }
 
-// function getStockCandle(symbol, interval, from, to) {
-//     return fetch('/finnhub/candlestick/?symbol=' + symbol + '&interval=' + interval + '&from=' + from + '&to=' + to)
-//         .then(response => response.json())
-// }
-
 function getCryptoCandle(symbol, interval, from, to) {
     return fetch('/finnhub/crypto/?symbol=' + symbol + '&interval=' + interval + '&from=' + from + '&to=' + to)
         .then(response => response.json())
 }
-
-// function finnCandleToOHLCData(data) {
-//     let result = [];
-//     for (let i = 0; i < data.c.length; i++) {
-//         result.push({
-//                 "time": UTCtoEDT(data.t[i]),
-//                 "open": data.o[i],
-//                 "high": data.h[i],
-//                 "low": data.l[i],
-//                 "close": data.c[i]
-//             });
-//     }
-//     return result;
-// }
 
 function finnCandleToLineData(data) {
     let result = [];
@@ -104,28 +87,22 @@ function updateQuote(current, currentPrice, updated) {
     updated.innerText = new Date().toLocaleString('en-US', {timeZone: 'America/New_York'}) + " EDT";
 }
 
-// function makeScaleButtonActive(scale) {
-//     let scaleButtons = document.getElementsByClassName('date-scale-btn');
-//     [].forEach.call(scaleButtons, function(element) {
-//         element.classList.remove('active')
-//     });
-//     document.getElementById(scale).labels[0].classList.add('active');
-// }
-
 document.addEventListener('DOMContentLoaded', function() {
     const chartBody = document.getElementById('chart');
+    const graphContainer = document.getElementById('graphContainer');
     const symbolName = document.getElementById('symbol-name');
     const symbolSelectForm = document.getElementById('symbol-select');
 
+    console.log("chartContainer has width: " + graphContainer.offsetWidth + ", height: " + graphContainer.offsetHeight);
+
     const current = document.getElementById('price-current');
-    // const open = document.getElementById('price-open');
-    // const high = document.getElementById('price-high');
-    // const low = document.getElementById('price-low');
     const updated = document.getElementById('last-updated');
 
     const priceChart = LightweightCharts.createChart(chartBody, {
-        width: 480,
-        height: 300,
+        // width: 480,
+        // height: 300,
+        width: Math.floor(graphContainer.offsetWidth * CHART_WIDTH_PERCENTAGE),
+        height: Math.floor(graphContainer.offsetHeight * CHART_HEIGHT_PERCENTAGE),
         timeScale: {
             timeVisible: true
         },
@@ -140,21 +117,11 @@ document.addEventListener('DOMContentLoaded', function() {
     let symbol = "BINANCE:BTCUSDT";
     let scale = "day";
 
-    // document.querySelectorAll('input[name="date-scale"]').forEach((button) => {
-    //     button.addEventListener("click", function(event) {
-    //         scale = event.target.id;
-    //         makeScaleButtonActive(scale);
-    //
-    //         loadChartData(symbol, scale, priceChart, areaSeries, chartTitle, current, updated);
-    //     })
-    // });
-
     loadChartData(symbol, scale, priceChart, areaSeries, symbolName, current, updated);
 
     symbolSelectForm.addEventListener('submit', (event) => {
         event.preventDefault();
         symbol = event.target[0].value;
-        // updateQuote();
         loadChartData(symbol, 'day', priceChart, areaSeries, symbolName, current, updated);
     });
 

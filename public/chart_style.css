@@ -1,6 +1,6 @@
 #chart-container {
     padding-top: 10px;
-    padding-left: 20px;
+    padding-left: 15px;
 }
 
 #chart-title {
@@ -15,16 +15,12 @@
     margin-left: 30px;
 }
 
-/*#switcher {*/
-/*    margin-top: 20px;*/
-/*}*/
-
 #quote {
     width: 500px;
 }
 
 #symbol-select-container {
-    padding-left: 20px;
+    padding-left: 15px;
     margin-top: 20px;
     width: 500px;
 }

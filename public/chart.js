@@ -99,10 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const updated = document.getElementById('last-updated');
 
     const priceChart = LightweightCharts.createChart(chartBody, {
-        // width: 480,
-        // height: 300,
-        width: Math.floor(graphContainer.offsetWidth * CHART_WIDTH_PERCENTAGE),
-        height: Math.floor(graphContainer.offsetHeight * CHART_HEIGHT_PERCENTAGE),
         timeScale: {
             timeVisible: true
         },
@@ -112,7 +108,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    resizeChart();
     const areaSeries = priceChart.addAreaSeries({lineWidth: 1});
+
+    function resizeChart() {
+        console.log("Resizing chart")
+        priceChart.applyOptions({
+            width: Math.floor(graphContainer.offsetWidth * CHART_WIDTH_PERCENTAGE),
+            height: Math.floor(graphContainer.offsetHeight * CHART_HEIGHT_PERCENTAGE)
+        });
+    }
+
+    window.onresize = resizeChart;
 
     let symbol = "BINANCE:BTCUSDT";
     let scale = "day";

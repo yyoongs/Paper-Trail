@@ -95,7 +95,8 @@ function finnCandleToLineData(data) {
     return result;
 }
 
-function loadChartData(symbol, scale, chart, series, title) {
+function loadChartData(symbol, scale, chart, series, title, ) {
+    makeScaleButtonActive(scale);
     let now = getUTCTimestampSeconds();
     let range = createRange(now, scale);
 
@@ -114,6 +115,14 @@ function loadChartData(symbol, scale, chart, series, title) {
             });
             chart.timeScale().fitContent();
         });
+}
+
+function makeScaleButtonActive(scale) {
+    let scaleButtons = document.getElementsByClassName('date-scale-btn');
+    [].forEach.call(scaleButtons, function(element) {
+        element.classList.remove('active')
+    });
+    document.getElementById(scale).labels[0].classList.add('active');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -139,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    // const barSeries = priceChart.addBarSeries();
     const areaSeries = priceChart.addAreaSeries({lineWidth: 1});
 
     // let symbol = "AAPL";
@@ -150,9 +158,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelectorAll('input[name="date-scale"]').forEach((button) => {
         button.addEventListener("click", function(event) {
-            // console.log(event.target.id);
             scale = event.target.id;
-            loadChartData(symbol, scale, priceChart, barSeries, chartTitle);
+            makeScaleButtonActive(scale);
+
+            loadChartData(symbol, scale, priceChart, areaSeries, chartTitle);
         })
     });
 
@@ -162,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         symbol = event.target[0].value;
         updateQuote();
-        loadChartData(symbol, scale, priceChart, barSeries, chartTitle);
+        loadChartData(symbol, 'day', priceChart, areaSeries, chartTitle);
     });
 
     function updateQuote() {

@@ -28,3 +28,7 @@
 #symbol-input {
     width: 30%;
 }
+
+.btn-check {
+    display: none;
+}
